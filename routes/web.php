@@ -15,10 +15,12 @@ Route::get('home', function () {
     return view('welcome');
 });
 
+Route::group(['middleware' => 'guest'], function() {
+    Route::get('register', 'RegisterController@showRegistrationForm');
+    Route::post('register', 'RegisterController@register');
+    Route::get('login', 'LoginController@showLoginForm');
+    Route::post('login', 'LoginController@login');
+});
 
-Route::get('register', 'RegisterController@showRegistrationForm');
-Route::post('register', 'RegisterController@register');
-Route::get('login', 'LoginController@showLoginForm');
-Route::post('login', 'LoginController@login');
-Route::post('logout', 'LoginController@logout');
+Route::post('logout', 'LoginController@logout')->middleware('auth');
 

@@ -4,11 +4,13 @@ use Illuminate\Filesystem\Filesystem;
 use Illuminate\Filesystem\FilesystemManager;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Console\StorageLinkCommand;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
 use Illuminate\Contracts\Routing\ResponseFactory as Response;
+use Illuminate\Routing\Redirector;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Auth\AuthManager as Auth;
 use Illuminate\Mail\Mailer;
@@ -42,6 +44,8 @@ class Controller extends BaseController
     protected $auth;
 
     protected $mail;
+
+    protected $redirect;
     /**
      * Create new controller instance
      *
@@ -49,13 +53,15 @@ class Controller extends BaseController
      * @param  \Illuminate\Contracts\Routing\ResponseFactory  $response
      * @param \Illuminate\Auth\AuthManager $auth
      * @param \Illuminate\Mail\Mailer $mail
+     * @param \Illuminate\Routing\Redirector $redirect
      * @return void
      */
-    public function __construct(Request $request, Response $response, Auth $auth, Mailer $mail)
+    public function __construct(Request $request, Response $response, Auth $auth, Redirector $redirect, Mailer $mail)
     {
         $this->request = $request;
         $this->responseFactory = $response;
         $this->auth = $auth;
         $this->mail = $mail;
+        $this->redirect = $redirect;
     }
 }

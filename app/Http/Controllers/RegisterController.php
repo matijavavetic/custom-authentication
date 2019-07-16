@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use App\Http\Requests\RegistrationFormRequest;
 use App\User;
@@ -23,7 +24,7 @@ class RegisterController extends Controller
      * Validates data and stores newly registered user
      *
      * @param RegistrationFormRequest $request
-     * @return \Illuminate\Http\Response
+     * @return RedirectResponse
      * @throws
      */
     public function register(RegistrationFormRequest $request)
@@ -36,7 +37,7 @@ class RegisterController extends Controller
 
         $this->mail->to(request('email'))->send(new VerifyMail($userData));
 
-        return $this->responseFactory->view('welcome');
+        return $this->redirect->to('home');
     }
 
     /**
@@ -54,7 +55,7 @@ class RegisterController extends Controller
      * Finds user by their e-mail and confirms their account based on verification token
      *
      * @param string $token
-     * @return \Illuminate\Http\Response
+     * @return RedirectResponse
      */
     public function confirmation(string $token)
     {
@@ -63,10 +64,12 @@ class RegisterController extends Controller
         $thisUser = $user->where('email', request(['email']))->first();
 
         if ($token === $thisUser->verificationToken) {
-            $thisUser->confirmed = true;
+            $thisUser->confirmed = 1;
             $thisUser->save();
+        } else {
+            return $this->redirect->back();
         }
 
-        return $this->responseFactory->view('welcome');
+        return $this->redirect->to('login');
     }
 }

@@ -3,7 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\LoginFormRequest;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Redirector;
+use Illuminate\Support\Facades\Redirect;
 
 class LoginController extends Controller
 {
@@ -21,27 +24,30 @@ class LoginController extends Controller
      * Logs in the user if they exist
      *
      * @param LoginFormRequest $request
-     * @return \Illuminate\Http\Response
+     * @return RedirectResponse
      */
     public function login(LoginFormRequest $request)
     {
         $userData = $request->validateData();
 
-        if ($this->auth->attempt($userData)){
-            return $this->responseFactory->view('welcome');
+        if (! $this->auth->attempt($userData)) {
+            return $this->redirect->back();
         }
 
-        return $this->responseFactory->view('login')-with('Wrong email/password');
-}
+        return $this->redirect->to('home');
+    }
+
     /**
      * Logs out the user
      *
-     * @return \Illuminate\Http\Response
+     * @return RedirectResponse
      */
     public function logout()
     {
-        $this->auth->logout();
+        if ($this->auth->check()) {
+            $this->auth->logout();
+        }
 
-        return $this->responseFactory->view('welcome');
+        return $this->redirect->to('home');
     }
 }

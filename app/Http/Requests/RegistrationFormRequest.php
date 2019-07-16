@@ -16,6 +16,11 @@ class RegistrationFormRequest extends FormRequest
         return true;
     }
 
+    /**
+     * Get the validation rules that apply to the request.
+     *
+     * @return array
+     */
     public function rules()
     {
         return [
@@ -25,6 +30,12 @@ class RegistrationFormRequest extends FormRequest
         ];
     }
 
+    /**
+     * Validating form data for newly registered user
+     *
+     * @throws \Exception
+     * @return array
+     */
     public function validateData()
     {
         $input = [

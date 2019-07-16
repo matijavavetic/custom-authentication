@@ -2,7 +2,7 @@
 
 @section('content')
 
-    <h2>Register</h2>
+    <h2>Mail confirmation</h2>
 
     <form method="POST" action="/confirmation/{{ $token }}">
         {{ csrf_field() }}

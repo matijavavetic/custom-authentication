@@ -9,11 +9,23 @@ use App\Mail\VerifyMail;
 
 class RegisterController extends Controller
 {
+    /**
+     * Shows registration form to the guest
+     *
+     * @return \Illuminate\Http\Response
+     */
     public function showRegistrationForm()
     {
         return $this->responseFactory->view('auth.register');
     }
 
+    /**
+     * Validates data and stores newly registered user
+     *
+     * @param RegistrationFormRequest $request
+     * @return \Illuminate\Http\Response
+     * @throws
+     */
     public function register(RegistrationFormRequest $request)
     {
         $userData = $request->validateData();
@@ -24,17 +36,30 @@ class RegisterController extends Controller
 
         $this->mail->to(request('email'))->send(new VerifyMail($userData));
 
-        return redirect()->to('/home');
+        return $this->responseFactory->view('welcome');
     }
 
+    /**
+     * Shows user the form to confirm their mail
+     *
+     * @param string $token
+     * @return \Illuminate\Http\Response
+     */
     public function confirmMailForm(string $token)
     {
-        return view('auth.verifyMail', compact('token'));
+        return $this->responseFactory->view('auth.verification.verifyMail', compact('token'));
     }
 
+    /**
+     * Finds user by their e-mail and confirms their account based on verification token
+     *
+     * @param string $token
+     * @return \Illuminate\Http\Response
+     */
     public function confirmation(string $token)
     {
         $user = new User();
+
         $thisUser = $user->where('email', request(['email']))->first();
 
         if ($token === $thisUser->verificationToken) {
@@ -42,6 +67,6 @@ class RegisterController extends Controller
             $thisUser->save();
         }
 
-        return view('welcome');
+        return $this->responseFactory->view('welcome');
     }
 }

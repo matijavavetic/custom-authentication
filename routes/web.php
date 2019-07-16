@@ -20,9 +20,9 @@ Route::group(['middleware' => 'guest'], function() {
     Route::post('register', 'RegisterController@register');
     Route::get('login', 'LoginController@showLoginForm');
     Route::post('login', 'LoginController@login');
-
+    Route::get('confirmation/{token}', 'RegisterController@confirmMailForm');
+    Route::post('confirmation/{token}', 'RegisterController@confirmation');
 });
-Route::get('confirmation/{token}', 'RegisterController@confirmMailForm');
-Route::post('confirmation/{token}', 'RegisterController@confirmation');
+
 Route::post('logout', 'LoginController@logout')->middleware('auth');
 

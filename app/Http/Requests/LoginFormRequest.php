@@ -29,6 +29,11 @@ class LoginFormRequest extends FormRequest
         ];
     }
 
+    /**
+     * Validating form data for user trying to log in
+     *
+     * @return array
+     */
     public function validateData()
     {
         $input = request(['email', 'password']);

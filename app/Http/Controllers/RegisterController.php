@@ -61,18 +61,13 @@ class RegisterController extends Controller
      */
     public function confirm(string $token)
     {
-        $user = new User();
+        $findUser = new User();
 
-        $data = [
-            'user' => $user,
-            'token' => $token
-        ];
+        $user = $findUser->where('email', request('email'))->first();
 
-        $data['user'] = $user->where('email', request('email'))->first();
-
-        if ($data['token'] === $data['user']['verificationToken']) {
-            $data['user']['confirmed'] = 1;
-            $data['user']->save();
+        if ($token === $user['verificationToken']) {
+            $user['confirmed'] = 1;
+            $user->save();
         } else {
             return $this->responseFactory->redirectToAction('RegisterController@showConfirmationForm');
         }

@@ -4,7 +4,8 @@
     <h2>Login</h2>
 
     <form method="POST" action="/login">
-        {{ csrf_field() }}
+        @csrf
+
         <div class="form-group">
             <label for="email">Email:</label>
             <input type="email" class="form-control" id="email" name="email">
@@ -19,6 +20,10 @@
             <button style="cursor:pointer" type="submit" class="btn btn-primary">Login</button>
         </div>
 
+        @include('partials.formerrors')
+
     </form>
+
+    <a href="/password/reset">Lost your password?</a>
 
 @endsection

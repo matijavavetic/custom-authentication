@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\LoginFormRequest;
+use App\User;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Redirector;
@@ -28,13 +30,21 @@ class LoginController extends Controller
      */
     public function login(LoginFormRequest $request)
     {
-        $userData = $request->validateData();
+        $data = $request->validateData();
 
-        if (! $this->auth->attempt($userData)) {
-            return $this->responseFactory->redirectToAction('LoginController@login');
+        $findUser = new User();
+
+        $user = $findUser->where('email', $data['email'])->first();
+
+        if ($this->auth->attempt($data)) {
+            if ($user['confirmed']) {
+                return $this->responseFactory->redirectTo('home');
+            } else {
+                $this->auth->logout();
+                $this->session->flash('danger', 'Account not verified yet.');
+                return $this->responseFactory->redirectTo('login');
+            }
         }
-
-        return $this->responseFactory->redirectToAction('home');
     }
 
     /**
@@ -48,6 +58,6 @@ class LoginController extends Controller
             $this->auth->logout();
         }
 
-        return $this->responseFactory->redirectToAction('home');
+        return $this->responseFactory->redirectTo('home');
     }
 }

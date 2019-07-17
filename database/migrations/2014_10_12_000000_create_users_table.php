@@ -17,7 +17,8 @@ class CreateUsersTable extends Migration
             $table->bigIncrements('id');
             $table->string('name');
             $table->string('email')->unique();
-            $table->string('verificationToken');
+            $table->string('verificationToken')->nullable();
+            $table->string('lost_password_token')->nullable();
             $table->smallInteger('confirmed')->default(0);
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');

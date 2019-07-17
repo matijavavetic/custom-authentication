@@ -39,39 +39,8 @@ class RegisterController extends Controller
 
         $this->mail->to($data['email'])->send(new VerifyMail($data));
 
+        $this->session->flash('success', 'You have registered successfully. You can login now.');
+
         return $this->responseFactory->redirectTo('home');
-    }
-
-    /**
-     * Shows user the form to confirm their mail
-     *
-     * @param string $token
-     * @return \Illuminate\Http\Response
-     */
-    public function showConfirmationForm(string $token)
-    {
-        return $this->responseFactory->view('auth.verification.verifyMail', compact('token'));
-    }
-
-    /**
-     * Finds user by their e-mail and confirms their account based on verification token
-     *
-     * @param string $token
-     * @return RedirectResponse
-     */
-    public function confirm(string $token)
-    {
-        $findUser = new User();
-
-        $user = $findUser->where('email', request('email'))->first();
-
-        if ($token === $user['verificationToken']) {
-            $user['confirmed'] = 1;
-            $user->save();
-        } else {
-            return $this->responseFactory->redirectToAction('RegisterController@showConfirmationForm');
-        }
-
-        return $this->responseFactory->redirectToAction('LoginController@login');
     }
 }

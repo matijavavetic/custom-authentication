@@ -5,11 +5,11 @@
     <h2>Mail confirmation</h2>
 
     <form method="POST" action="/confirmation/{{ $token }}">
-        {{ csrf_field() }}
+        @csrf
 
         <div class="form-group">
             <label for="email">Please confirm your e-mail address:</label>
-            <input type="email" class="form-control" id="email" name="email">
+            <input type="email" class="form-control" id="email" name="email" required>
         </div>
 
 

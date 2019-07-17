@@ -16,12 +16,12 @@ Route::get('home', function () {
 });
 
 Route::group(['middleware' => 'guest'], function() {
-    Route::get('register', 'RegisterController@showRegistrationForm');
+    Route::get('register', 'RegisterController@show');
     Route::post('register', 'RegisterController@register');
-    Route::get('login', 'LoginController@showLoginForm');
+    Route::get('login', 'LoginController@show');
     Route::post('login', 'LoginController@login');
-    Route::get('confirmation/{token}', 'RegisterController@confirmMailForm');
-    Route::post('confirmation/{token}', 'RegisterController@confirmation');
+    Route::get('confirmation/{token}', 'RegisterController@showConfirmationForm');
+    Route::post('confirmation/{token}', 'RegisterController@confirm');
 });
 
 Route::post('logout', 'LoginController@logout')->middleware('auth');

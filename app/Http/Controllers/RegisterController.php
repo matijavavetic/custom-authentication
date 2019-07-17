@@ -15,7 +15,7 @@ class RegisterController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function showRegistrationForm()
+    public function show()
     {
         return $this->responseFactory->view('auth.register');
     }
@@ -29,15 +29,17 @@ class RegisterController extends Controller
      */
     public function register(RegistrationFormRequest $request)
     {
-        $userData = $request->validateData();
+        $data = $request->validateData();
+
+        $data['verificationToken'] = bin2hex(random_bytes(50));
 
         $user = new User();
 
-        $user->create($userData);
+        $user->create($data);
 
-        $this->mail->to(request('email'))->send(new VerifyMail($userData));
+        $this->mail->to($data['email'])->send(new VerifyMail($data));
 
-        return $this->redirect->to('home');
+        return $this->responseFactory->redirectTo('home');
     }
 
     /**
@@ -46,7 +48,7 @@ class RegisterController extends Controller
      * @param string $token
      * @return \Illuminate\Http\Response
      */
-    public function confirmMailForm(string $token)
+    public function showConfirmationForm(string $token)
     {
         return $this->responseFactory->view('auth.verification.verifyMail', compact('token'));
     }
@@ -57,19 +59,24 @@ class RegisterController extends Controller
      * @param string $token
      * @return RedirectResponse
      */
-    public function confirmation(string $token)
+    public function confirm(string $token)
     {
         $user = new User();
 
-        $thisUser = $user->where('email', request(['email']))->first();
+        $data = [
+            'user' => $user,
+            'token' => $token
+        ];
 
-        if ($token === $thisUser->verificationToken) {
-            $thisUser->confirmed = 1;
-            $thisUser->save();
+        $data['user'] = $user->where('email', request('email'))->first();
+
+        if ($data['token'] === $data['user']['verificationToken']) {
+            $data['user']['confirmed'] = 1;
+            $data['user']->save();
         } else {
-            return $this->redirect->back();
+            return $this->responseFactory->redirectToAction('RegisterController@showConfirmationForm');
         }
 
-        return $this->redirect->to('login');
+        return $this->responseFactory->redirectToAction('LoginController@login');
     }
 }

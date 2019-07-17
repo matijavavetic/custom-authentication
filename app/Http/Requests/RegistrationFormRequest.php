@@ -39,10 +39,9 @@ class RegistrationFormRequest extends FormRequest
     public function validateData()
     {
         $input = [
-            'name' => request('name'),
-            'password' => request('password'),
-            'email' => request('email'),
-            'verificationToken' => bin2hex(random_bytes(50))
+            'name' => $this->input('name'),
+            'email' => $this->input('email'),
+            'password' => $this->input('password')
         ];
 
         return $input;

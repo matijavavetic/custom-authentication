@@ -15,7 +15,7 @@ class LoginController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function showLoginForm()
+    public function show()
     {
         return $this->responseFactory->view('auth.login');
     }
@@ -31,10 +31,10 @@ class LoginController extends Controller
         $userData = $request->validateData();
 
         if (! $this->auth->attempt($userData)) {
-            return $this->redirect->back();
+            return $this->responseFactory->redirectToAction('LoginController@login');
         }
 
-        return $this->redirect->to('home');
+        return $this->responseFactory->redirectToAction('home');
     }
 
     /**
@@ -48,6 +48,6 @@ class LoginController extends Controller
             $this->auth->logout();
         }
 
-        return $this->redirect->to('home');
+        return $this->responseFactory->redirectToAction('home');
     }
 }

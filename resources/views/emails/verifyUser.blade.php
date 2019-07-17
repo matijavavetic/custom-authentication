@@ -5,11 +5,11 @@
 </head>
 
 <body>
-    <h1>Hi there {{ $user['name'] }}</h1>
+    <h1>Hi there {{ $data['name'] }}</h1>
 
     <p>Verify your email and account by clicking on the button below.</p>
 
-    <a href="{{url('confirmation', $user['verificationToken'])}}">VERIFY</a>
+    <a href="{{url('confirmation', $data['verificationToken'])}}">VERIFY</a>
 </body>
 
 </html>

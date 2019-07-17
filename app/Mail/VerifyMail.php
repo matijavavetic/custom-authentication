@@ -12,15 +12,15 @@ class VerifyMail extends Mailable
 {
     use Queueable, SerializesModels;
 
-    public $user;
+    public $data;
 
-    public function __construct($user)
+    public function __construct($data)
     {
-        $this->user = $user;
+        $this->data = $data;
     }
 
     public function build()
     {
-        return $this->view('auth.verification.verifyUser');
+        return $this->view('emails.verifyUser');
     }
 }
